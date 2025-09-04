@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование пользователя</title>
+    <!-- Подключаем общие стили для форм -->
+    <link rel="stylesheet" th:href="@{/css/form-styles.css}"/>
+</head>
+<body>
+<!-- Вставляем наш общий header -->
+<div th:replace="~{header :: header}"></div>
+
+<div class="container">
+    <h2>Редактировать пользователя</h2>
+    <form th:action="@{/admin/users/edit/{id}(id=${user.id})}" th:object="${user}" method="post">
+        <!-- Скрытое поле для пароля, чтобы он не затирался при сохранении -->
+        <input type="hidden" th:field="*{password}" />
+
+        <div class="form-group">
+            <label for="firstName">Имя:</label>
+            <input type="text" id="firstName" th:field="*{firstName}" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Фамилия:</label>
+            <input type="text" id="lastName" th:field="*{lastName}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required>
+        </div>
+        <div class="form-group">
+            <label for="role">Роль:</label>
+            <select id="role" th:field="*{role}" class="form-control">
+                <!-- Используем T(com.testing.system.model.UserRole).values() для получения всех ролей из Enum -->
+                <option th:each="roleValue : ${T(com.testing.system.model.UserRole).values()}"
+                        th:value="${roleValue}"
+                        th:text="${roleValue}">
+                </option>
+            </select>
+        </div>
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление Группой</title>
+    <link rel="stylesheet" th:href="@{/css/form-styles.css}"/>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<div class="container">
+    <h1>Управление группой: <span th:text="${group.name}"></span></h1>
+    <p th:text="${group.description}"></p>
+
+    <hr style="margin: 2rem 0;">
+
+    <!-- Форма добавления нового пользователя в группу -->
+    <h3>Добавить кандидата в группу</h3>
+    <form th:action="@{/instructor/groups/{groupId}/addUser(groupId=${group.id})}" method="post">
+        <div class="form-group">
+            <label for="userId">Выберите кандидата:</label>
+            <select id="userId" name="userId" required>
+                <option value="">-- Не выбрано --</option>
+                <option th:each="user : ${usersNotInGroup}"
+                        th:value="${user.id}"
+                        th:text="${user.firstName + ' ' + user.lastName + ' (' + user.email + ')'}">
+                </option>
+            </select>
+        </div>
+        <button type="submit">Добавить</button>
+    </form>
+
+    <hr style="margin: 2rem 0;">
+
+    <!-- Список пользователей, которые уже в группе -->
+    <h3>Кандидаты в этой группе</h3>
+    <div th:if="${usersInGroup.isEmpty()}">
+        <p>В этой группе пока нет кандидатов.</p>
+    </div>
+    <ul>
+        <li th:each="user : ${usersInGroup}"
+            th:text="${user.firstName + ' ' + user.lastName}">
+        </li>
+    </ul>
+
+    <a th:href="@{/instructor/groups}">Назад к списку групп</a>
+</div>
+</body>
+</html>

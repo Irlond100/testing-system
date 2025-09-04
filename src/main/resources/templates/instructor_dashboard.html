@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель инструктора</title>
+    <!-- Стили как в админ-панели для единообразия -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; margin: 0; }
+        .container { max-width: 1000px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1, h2 { color: #1c1e21; border-bottom: 1px solid #ddd; padding-bottom: 1rem; margin-bottom: 2rem;}
+        .actions-bar { margin-bottom: 2rem; display: flex; gap: 1rem; }
+        .btn { text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 6px; background-color: #1877f2; color: white; font-weight: bold; }
+        .btn:hover { opacity: 0.9; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #ddd; }
+        th { background-color: #f5f6f7; }
+    </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container">
+    <h1>Панель инструктора</h1>
+    <div class="actions-bar">
+        <a th:href="@{/tests/create}" class="btn">Создать новый тест</a>
+        <a th:href="@{/instructor/groups}" class="btn" style="background-color: #36a420;">Управление Группами</a>
+    </div>
+
+    <h2>Существующие тесты</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="test : ${tests}">
+            <td th:text="${test.title}">Название теста</td>
+            <td th:text="${test.description}">Описание</td>
+            <td>
+                <a th:href="@{/tests/{id}/add-question(id=${test.id})}">Добавить вопросы</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
+    

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет кандидата</title>
+    <!-- Стили из user_list.html для единообразия -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; margin: 0; }
+        .container { max-width: 1000px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #1c1e21; border-bottom: 1px solid #ddd; padding-bottom: 1rem; margin-bottom: 2rem;}
+        .test-item { border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+        .test-info h3 { margin: 0 0 0.5rem 0; }
+        .start-btn { text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 6px; background-color: #1877f2; color: white; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+<div class="container">
+    <h1>Доступные тесты</h1>
+    <div th:if="${tests.isEmpty()}">
+        <p>На данный момент нет доступных тестов.</p>
+    </div>
+    <div th:each="test : ${tests}" class="test-item">
+        <div class="test-info">
+            <h3 th:text="${test.title}">Название теста</h3>
+            <p th:text="${test.description}">Описание теста.</p>
+        </div>
+        <div>
+            <a th:href="@{/attempt/start/{id}(id=${test.id})}" class="start-btn">Начать тест</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+    

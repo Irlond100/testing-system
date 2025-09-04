@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)" xmlns:sec="[http://www.thymeleaf.org/extras/spring-security](http://www.thymeleaf.org/extras/spring-security)">
+<head>
+    <style>
+        .navbar { background-color: #fff; padding: 1rem 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { text-decoration: none; color: #1877f2; font-weight: bold; margin-left: 1.5rem; }
+        .navbar .logo { font-size: 1.5rem; margin-left: 0; }
+        .navbar .user-info { color: #4b4f56; }
+    </style>
+</head>
+<body>
+<nav class="navbar" th:fragment="header">
+    <a th:href="@{/}" class="logo">Система Тестирования</a>
+    <div>
+        <!-- Этот блок виден только НЕАУТЕНТИФИЦИРОВАННЫМ пользователям -->
+        <div sec:authorize="!isAuthenticated()">
+            <a th:href="@{/register}">Регистрация</a>
+            <a th:href="@{/login}">Войти</a>
+        </div>
+        <!-- Этот блок виден только АУТЕНТИФИЦИРОВАННЫМ пользователям -->
+        <div sec:authorize="isAuthenticated()">
+            <span class="user-info">Вы вошли как: <span sec:authentication="name"></span></span>
+            <a th:href="@{/home}">Мой кабинет</a>
+            <a th:href="@{/logout}">Выйти</a>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление пользователями</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; margin: 0; }
+        .container { max-width: 1000px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #1c1e21; border-bottom: 1px solid #ddd; padding-bottom: 1rem; margin-bottom: 2rem;}
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid #ddd; }
+        th { background-color: #f5f6f7; }
+        .actions a { margin-right: 0.5rem; text-decoration: none; padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .edit-btn { background-color: #1877f2; color: white; }
+        .delete-btn { background-color: #e4e6eb; color: #4b4f56; }
+    </style>
+</head>
+<body>
+<!-- Вставляем наш общий header -->
+<div th:replace="~{header :: header}"></div>
+
+<div class="container">
+    <h1>Управление пользователями</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Email</th>
+            <th>Роль</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}">1</td>
+            <td th:text="${user.firstName}">Имя</td>
+            <td th:text="${user.lastName}">Фамилия</td>
+            <td th:text="${user.email}">email@example.com</td>
+            <td th:text="${user.role}">ROLE_CANDIDATE</td>
+            <td class="actions">
+                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="edit-btn">Редактировать</a>
+                <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" class="delete-btn" onclick="return confirm('Вы уверены?');">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

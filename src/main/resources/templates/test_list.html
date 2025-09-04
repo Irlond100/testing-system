@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Список тестов</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1c1e21; margin-bottom: 2rem; }
+        .btn { display: inline-block; background-color: #1877f2; color: #fff; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; }
+        .btn:hover { background-color: #166fe5; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f5f6f7; color: #4b4f56; }
+        tr:hover { background-color: #f0f2f5; }
+        .action-link { color: #1877f2; text-decoration: none; font-weight: bold; }
+        .action-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{header :: header}"></div>
+
+<div class="container">
+    <h1>Список доступных тестов</h1>
+
+    <div sec:authorize="hasAnyRole('INSTRUCTOR', 'ADMIN')">
+        <a th:href="@{/tests/create}" class="btn">Создать новый тест</a>
+    </div>
+
+    <table th:if="${not #lists.isEmpty(tests)}">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Автор</th>
+            <th>Дата создания</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="test : ${tests}">
+            <td th:text="${test.title}">Название теста</td>
+            <td th:text="${test.description}">Описание теста</td>
+            <td th:text="${test.instructor.email}">email@example.com</td>
+            <td th:text="${#dates.format(test.createdAt, 'dd-MM-yyyy HH:mm')}">01-01-2023</td>
+            <td>
+                <a th:href="@{/tests/{id}/add-question(id=${test.id})}" class="action-link">Добавить вопрос</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${#lists.isEmpty(tests)}" style="text-align: center; margin-top: 2rem; color: #65676b;">
+        Тестов пока нет.
+    </div>
+</div>
+
+</body>
+</html>

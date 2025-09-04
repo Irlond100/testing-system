@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить вопрос</title>
+    <link rel="stylesheet" th:href="@{/css/form-styles.css}"/>
+    <style>
+        .answer-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        .answer-group input[type="radio"] { margin-right: 10px; width: auto; }
+        .answer-group input[type="text"] { flex-grow: 1; }
+        .alert-success { padding: 1rem; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 4px; margin-bottom: 1rem;}
+    </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container">
+    <h2>Добавить вопрос в тест: <span th:text="${test.title}"></span></h2>
+
+    <!-- Сообщение об успешном добавлении -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <form th:action="@{/tests/{testId}/add-question(testId=${test.id})}" th:object="${questionForm}" method="post">
+        <div class="form-group">
+            <label for="questionText">Текст вопроса:</label>
+            <textarea id="questionText" th:field="*{questionText}" rows="3" required></textarea>
+        </div>
+
+        <h4>Варианты ответов (отметьте правильный):</h4>
+
+        <!-- Thymeleaf будет итерироваться по списку ответов в форме -->
+        <div th:each="answer, stat : *{answers}" class="form-group">
+            <div class="answer-group">
+                <!-- Радиокнопка. 'name' у всех одинаковый, чтобы можно было выбрать только один. -->
+                <input type="radio" th:name="correctAnswerIndex" th:value="${stat.index}" th:checked="${answer.isCorrect}" required/>
+
+                <!-- Текстовое поле для варианта ответа. Обратите внимание на th:field -->
+                <input type="text" th:field="*{answers[__${stat.index}__].answerText}" placeholder="Введите вариант ответа"/>
+
+                <!-- Скрытое поле для флага isCorrect, которое будет меняться с помощью JS -->
+                <input type="hidden" th:field="*{answers[__${stat.index}__].isCorrect}"/>
+            </div>
+        </div>
+
+        <button type="submit">Добавить вопрос</button>
+        <a th:href="@{/instructor/dashboard}" style="margin-left: 1rem;">Завершить и вернуться</a>
+    </form>
+</div>
+
+<script>
+    // Небольшой скрипт для установки isCorrect=true у выбранного ответа
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const radios = form.querySelectorAll('input[type="radio"]');
+
+        form.addEventListener('submit', function(e) {
+            // Перед отправкой формы, мы проходимся по всем скрытым полям
+            const hiddenInputs = form.querySelectorAll('input[type="hidden"]');
+            hiddenInputs.forEach(input => input.value = 'false'); // Сбрасываем все на false
+
+            // Находим выбранную радиокнопку
+            const checkedRadio = form.querySelector('input[type="radio"]:checked');
+            if (checkedRadio) {
+                // Находим соответствующее ей скрытое поле и ставим true
+                const index = checkedRadio.value;
+                const correspondingHiddenInput = document.getElementById('answers' + index + '.isCorrect');
+                if(correspondingHiddenInput) {
+                    correspondingHiddenInput.value = 'true';
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
