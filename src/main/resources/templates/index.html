@@ -21,11 +21,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 5%;
-            background: rgba(13, 26, 38, 0.95);
-            backdrop-filter: blur(6px);
+            padding: 0.8rem 3%;
+            background: url('/images/an-2-plane.jpg') center/cover no-repeat; /* 👈 твоя картинка */
             z-index: 1000;
-            flex-wrap: wrap; /* чтобы кнопки не уезжали */
         }
         .logo {
             font-size: 1.8rem;
@@ -33,11 +31,11 @@
             color: #00c6ff;
             text-decoration: none;
             font-family: 'Oswald', sans-serif;
-            margin-bottom: 0.5rem;
         }
+
+        /* Навигация */
         .nav-buttons {
             display: flex;
-            flex-wrap: wrap;
             gap: 0.5rem;
         }
         .nav-buttons a {
@@ -61,10 +59,21 @@
             box-shadow: 0 4px 15px rgba(0, 198, 255, 0.5);
         }
 
+        /* Бургер */
+        .burger {
+            display: none;
+            font-size: 2rem;
+            color: #00c6ff;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
         /* Hero */
         .hero-section {
             background: url('/images/an-2-plane.jpg') center/cover no-repeat;
             height: 100vh;
+            padding-top: 80px; /* место под хедер */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -83,7 +92,6 @@
         .hero-content {
             position: relative;
             z-index: 2;
-            margin-top: 4rem; /* чтобы текст не прятался под шапкой */
         }
         .main-title {
             font-size: 3.5rem;
@@ -127,27 +135,14 @@
             border-radius: 12px;
             text-align: center;
             width: 300px;
-            transition: 0.3s;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
         }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,198,255,0.4);
-        }
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #00c6ff;
-        }
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.8rem;
-            color: #fff;
-        }
-        .card-text {
-            font-size: 1rem;
-            line-height: 1.6;
+        .feature-card.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Footer */
@@ -159,6 +154,28 @@
             font-size: 0.9rem;
             border-top: 1px solid #1a3249;
         }
+
+        /* Адаптив */
+        @media (max-width: 900px) {
+            .nav-buttons {
+                display: none;
+                flex-direction: column;
+                gap: 1rem;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background: #1a3249;
+                padding: 1rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            }
+            .nav-buttons.show {
+                display: flex;
+            }
+            .burger {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
@@ -166,6 +183,7 @@
 <!-- Header -->
 <div class="header">
     <a href="/" class="logo">AVIATEST</a>
+    <button class="burger">☰</button>
     <div class="nav-buttons">
         <a th:if="${#authorization.expression('!isAuthenticated()')}" th:href="@{/login}" class="login-btn">Войти</a>
         <a th:if="${#authorization.expression('!isAuthenticated()')}" th:href="@{/register}" class="register-btn">Регистрация</a>
@@ -204,5 +222,70 @@
     <p>&copy; 2024 AVIATEST. Все права защищены.</p>
 </div>
 
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- JS -->
+<script>
+    // Плавная прокрутка
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute("href")).scrollIntoView({
+                behavior: "smooth"
+            });
+        });
+    });
+
+    // Анимация карточек при скролле
+    const cards = document.querySelectorAll(".feature-card");
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("show");
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2 });
+    cards.forEach(card => observer.observe(card));
+
+    // Валидация и AJAX
+    $(document).on("submit", "form.ajax-form", function (e) {
+        e.preventDefault();
+        const $form = $(this);
+
+        let valid = true;
+        $form.find("input[required]").each(function () {
+            if (!$(this).val().trim()) {
+                $(this).css("border", "2px solid red");
+                valid = false;
+            } else {
+                $(this).css("border", "");
+            }
+        });
+        if (!valid) return;
+
+        $.ajax({
+            url: $form.attr("action"),
+            type: $form.attr("method") || "POST",
+            data: $form.serialize(),
+            success: function () {
+                alert("Успех ✅");
+            },
+            error: function () {
+                alert("Ошибка ❌");
+            }
+        });
+    });
+
+    // Бургер-меню
+    const burger = document.querySelector(".burger");
+    const nav = document.querySelector(".nav-buttons");
+    burger.addEventListener("click", () => {
+        nav.classList.toggle("show");
+    });
+</script>
+
 </body>
 </html>
+

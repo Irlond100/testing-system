@@ -28,15 +28,13 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    // Для безопасности (аутентификация, авторизация)
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     // Lombok для сокращения шаблонного кода
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    // Поддержка Spring Security в Thymeleaf
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
