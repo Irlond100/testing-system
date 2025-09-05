@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Прохождение теста</title>
+    <link rel="stylesheet" th:href="@{/css/form-styles.css}"/>
+    <style>
+        .question-text { font-size: 1.5rem; margin-bottom: 2rem; }
+        .answer-label { display: block; padding: 1rem; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 1rem; cursor: pointer; }
+        .answer-label:hover { background-color: #f0f2f5; }
+        .answer-label input { margin-right: 10px; }
+    </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container">
+    <h1 th:text="${attempt.test.title}">Название теста</h1>
+    <hr>
+    <p class="question-text" th:text="${question.text}">Текст вопроса...</p>
+
+    <form th:action="@{/attempt/{attemptId}/question/{questionId}(attemptId=${attempt.id}, questionId=${question.id})}" method="post">
+        <div class="form-group">
+            <label th:each="answer : ${question.answers}" class="answer-label">
+                <input type="radio" name="answerId" th:value="${answer.id}" required/>
+                <span th:text="${answer.text}">Текст ответа</span>
+            </label>
+        </div>
+        <button type="submit">Следующий вопрос</button>
+    </form>
+</div>
+</body>
+</html>

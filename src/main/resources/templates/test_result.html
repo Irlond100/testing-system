@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Результат теста</title>
+    <link rel="stylesheet" th:href="@{/css/form-styles.css}"/>
+    <style>
+        .result-panel { text-align: center; }
+        .score { font-size: 4rem; font-weight: bold; color: #1877f2; }
+        .score-text { font-size: 1.2rem; color: #606770; }
+    </style>
+</head>
+<body>
+<div th:replace="~{header :: header}"></div>
+
+<div class="container result-panel">
+    <h1>Тест завершен!</h1>
+    <h2 th:text="${attempt.test.title}">Название теста</h2>
+
+    <p class="score-text">Ваш результат:</p>
+    <div class="score" th:text="${#numbers.formatDecimal(attempt.score, 1, 2) + '%'}">85.00%</div>
+
+    <a th:href="@{/candidate/dashboard}" class="btn" style="margin-top: 2rem;">Вернуться в личный кабинет</a>
+</div>
+</body>
+</html>
